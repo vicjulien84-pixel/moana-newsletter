@@ -1,0 +1,1313 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Moana Yachting — Newsletter Builder</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --moana:#1B8097;--moana-dark:#156B7E;
+  --btn-violet:#6B5CE7;--btn-violet-dark:#5648C0;
+  --border:#E4E4E4;--text:#1A1A1A;--muted:#777;--form-bg:#F4F7F9;
+}
+body{font-family:Arial,Helvetica,sans-serif;background:#D0D4D7;min-height:100vh;}
+#step-form{max-width:700px;margin:0 auto;padding:32px 16px 60px;}
+.form-header{background:var(--moana);border-radius:4px 4px 0 0;}
+.form-header img{width:100%;display:block;border-radius:4px 4px 0 0;}
+.form-body{background:white;border:1px solid #CCC;border-top:none;padding:28px 32px 32px;border-radius:0 0 4px 4px;}
+.form-title{font-size:18px;font-weight:700;color:var(--moana);margin-bottom:4px;}
+.form-subtitle{font-size:12px;color:var(--muted);margin-bottom:20px;line-height:1.6;}
+.banner{border-radius:4px;padding:14px 18px;margin-bottom:14px;display:flex;align-items:center;gap:14px;}
+.banner .emoji{font-size:24px;flex-shrink:0;}
+.banner .txt .ttl{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:3px;}
+.banner .txt .sub{font-size:11.5px;line-height:1.55;}
+.banner a{flex-shrink:0;padding:9px 16px;border-radius:3px;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;text-decoration:none;white-space:nowrap;}
+.banner-yellow{background:#FFF8E7;border:1.5px solid #F0C040;}
+.banner-yellow .ttl{color:#B8860B;}.banner-yellow .sub{color:#7A6000;}.banner-yellow a{background:#F0C040;color:#7A4F00;}
+.banner-blue{background:#EEF7FA;border:1.5px solid #1B8097;}
+.banner-blue .ttl{color:#1B8097;}.banner-blue .sub{color:#2A6070;}.banner-blue a{background:#1B8097;color:white;}
+.intro-section,.vsection{background:var(--form-bg);border:1px solid var(--border);border-radius:4px;padding:16px 18px;margin-bottom:12px;}
+.vsection:last-child{margin-bottom:0;}
+.sttl{font-size:10px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--moana);margin-bottom:13px;padding-bottom:8px;border-bottom:1.5px solid rgba(27,128,151,.2);}
+.field{margin-bottom:11px;}.field:last-child{margin-bottom:0;}
+.field label{display:block;font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:#555;margin-bottom:5px;}
+.field input,.field textarea{width:100%;background:white;border:1px solid #D0D0D0;border-radius:3px;font-family:Arial,Helvetica,sans-serif;font-size:13px;color:var(--text);padding:8px 11px;outline:none;transition:border-color .2s;}
+.field input:focus,.field textarea:focus{border-color:var(--moana);}
+.field input::placeholder,.field textarea::placeholder{color:#C0C0C0;font-style:italic;}
+.field textarea{resize:vertical;min-height:70px;line-height:1.7;}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
+.url-photo-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;}
+.url-photo-grid.three{grid-template-columns:1fr 1fr 1fr;}
+.url-photo-field label{display:block;font-size:9px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:#888;margin-bottom:4px;}
+.url-photo-field input{width:100%;background:white;border:1px solid #D0D0D0;border-radius:3px;font-family:Arial,Helvetica,sans-serif;font-size:11px;color:var(--text);padding:7px 10px;outline:none;transition:border-color .2s;}
+.url-photo-field input:focus{border-color:var(--moana);}
+.url-photo-field input::placeholder{color:#C0C0C0;font-style:italic;}
+.url-photo-field .preview-thumb{width:100%;height:52px;object-fit:cover;border-radius:2px;margin-top:5px;display:none;border:1px solid #DDD;}
+.sub-label{font-size:9px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:#888;margin-bottom:6px;margin-top:4px;display:block;}
+.hl-row{display:flex;gap:8px;margin-bottom:7px;align-items:center;}
+.hl-row input{flex:1;}
+.btn-del-hl{flex-shrink:0;width:26px;height:26px;background:none;border:1px solid #DDD;border-radius:3px;color:#AAA;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;}
+.btn-del-hl:hover{border-color:#c0392b;color:#c0392b;}
+.btn-add-hl{background:none;border:1px dashed #C0D8E0;border-radius:3px;color:var(--moana);font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;padding:7px 14px;cursor:pointer;width:100%;margin-top:3px;transition:all .2s;}
+.btn-add-hl:hover{background:rgba(27,128,151,.05);border-style:solid;}
+.vessels-list{display:flex;flex-direction:column;gap:14px;margin-bottom:16px;}
+.vessel-card{border:1.5px solid var(--border);border-radius:4px;background:white;overflow:hidden;}
+.vessel-card-header{display:flex;align-items:center;gap:14px;padding:14px 18px;background:linear-gradient(90deg,#EAF4F7,#F4F7F9);border-bottom:2px solid rgba(27,128,151,.15);cursor:pointer;user-select:none;transition:background .2s;}
+.vessel-card-header:hover{background:linear-gradient(90deg,#ddf0f5,#edf4f7);}
+.vcnum{width:30px;height:30px;border-radius:6px;background:var(--moana);color:white;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 2px 6px rgba(27,128,151,.3);}
+.vcname{flex:1;font-size:14px;font-weight:700;color:#1A1A1A;letter-spacing:.01em;}
+.vcname-sub{font-size:9px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:#9BB5BC;margin-left:8px;font-family:Arial,sans-serif;}
+.vc-toggle{font-size:18px;color:#9BB5BC;transition:transform .25s;}
+.vc-toggle.open{transform:rotate(180deg);}
+.btn-rm-vessel{background:none;border:1px solid #DDD;border-radius:3px;color:#BBB;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:5px 11px;cursor:pointer;transition:all .2s;white-space:nowrap;}
+.btn-rm-vessel:hover{border-color:#c0392b;color:#c0392b;background:#fff5f5;}
+.vessel-card-body{padding:16px 18px;display:none;}
+.vessel-card-body.open{display:block;}
+.btn-add-vessel{width:100%;margin-bottom:16px;padding:14px;background:none;border:2px dashed #1B8097;border-radius:4px;color:var(--moana);font-family:Arial,Helvetica,sans-serif;font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;transition:all .2s;}
+.btn-add-vessel:hover{background:rgba(27,128,151,.05);}
+.btn-generate{width:100%;padding:16px;background:var(--moana);border:none;border-radius:3px;color:white;font-family:Arial,Helvetica,sans-serif;font-size:12px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;cursor:pointer;transition:background .2s;}
+.btn-generate:hover{background:var(--moana-dark);}
+#step-preview{display:none;max-width:680px;margin:0 auto;padding:24px 16px 60px;}
+.preview-actions{display:flex;gap:10px;margin-bottom:20px;}
+.btn-back{padding:13px 20px;background:white;border:1px solid #CCC;border-radius:3px;color:var(--muted);font-family:Arial,Helvetica,sans-serif;font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;cursor:pointer;transition:all .2s;}
+.btn-back:hover{border-color:var(--moana);color:var(--moana);}
+.btn-copy-html{flex:1;padding:13px;background:var(--btn-violet);border:none;border-radius:3px;color:white;font-family:Arial,Helvetica,sans-serif;font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;transition:background .2s;}
+.btn-copy-html:hover{background:var(--btn-violet-dark);}
+.nl{max-width:600px;margin:0 auto;background:white;border:1px solid #CCC;}
+.nl-header{background:#1B8097;}.nl-header img{width:100%;display:block;}
+.nl-intro{padding:26px 44px 22px;text-align:center;border-bottom:1px solid #E4E4E4;}
+.nl-intro p{font-size:13.5px;color:#444;line-height:1.9;font-style:italic;}.nl-intro p+p{margin-top:6px;}
+.vessel-sep{padding:10px 28px;background:#1B8097;text-align:center;border-top:3px solid #156B7E;}
+.vessel-sep span{font-size:9px;font-weight:700;letter-spacing:.38em;text-transform:uppercase;color:rgba(255,255,255,.6);}
+.nl-hero{width:100%;height:320px;display:block;object-fit:cover;border-bottom:1px solid #E4E4E4;}
+.nl-hero-empty{width:100%;height:240px;background:linear-gradient(160deg,#BCC8D0,#96AEBB);display:flex;align-items:center;justify-content:center;border-bottom:1px solid #E4E4E4;}
+.nl-hero-empty span{font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:rgba(0,0,0,.2);}
+.nl-price{background:#F9F9F9;border-bottom:1px solid #E4E4E4;padding:10px 24px;text-align:center;font-size:13px;color:#555;}
+.nl-price strong{color:#1A1A1A;font-size:15px;font-weight:700;}
+.gallery-wrap{display:flex;border-bottom:1px solid #E4E4E4;}
+.nl-gallery-img{flex:1;height:165px;object-fit:cover;border-right:1.5px solid white;display:block;}
+.nl-gallery-img:last-child{border-right:none;}
+.nl-gallery-empty{flex:1;height:165px;background:linear-gradient(135deg,#C5CACF,#A7B4BC);display:flex;align-items:center;justify-content:center;border-right:1.5px solid white;}
+.nl-gallery-empty:last-child{border-right:none;}
+.nl-gallery-empty span{font-size:7px;letter-spacing:.3em;text-transform:uppercase;color:rgba(0,0,0,.2);}
+.gallery-wrap-3 .nl-gallery-img,.gallery-wrap-3 .nl-gallery-empty{height:130px;}
+.nl-section{padding:22px 28px;border-bottom:1px solid #E4E4E4;background:white;}
+.nl-section-title{font-size:10.5px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:#1B8097;padding-bottom:9px;margin-bottom:13px;border-bottom:1.5px solid #1B8097;display:inline-block;}
+.nl-section p{font-size:13px;color:#444;line-height:1.85;margin-bottom:7px;}.nl-section p:last-child{margin-bottom:0;}
+.nl-location{padding:12px 28px;background:#F9F9F9;border-bottom:1px solid #E4E4E4;font-size:12px;color:#777;text-transform:uppercase;letter-spacing:.14em;font-weight:600;}
+.nl-highlights{padding:20px 28px 22px;border-bottom:1px solid #E4E4E4;background:white;}
+.nl-hl-list{list-style:none;margin-top:10px;}
+.nl-hl-list li{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid #E4E4E4;font-size:13px;color:#1A1A1A;line-height:1.5;}
+.nl-hl-list li:last-child{border-bottom:none;}
+.nl-hl-list li::before{content:"—";color:#1B8097;font-weight:700;flex-shrink:0;}
+.nl-specs-header{background:#1B8097;padding:11px 28px;text-align:center;}
+.nl-specs-header span{font-size:9.5px;font-weight:700;letter-spacing:.38em;text-transform:uppercase;color:rgba(255,255,255,.65);}
+.specs-table{width:100%;border-collapse:collapse;background:white;}
+.specs-table td{width:33.33%;padding:13px 10px;border:1px solid #E4E4E4;text-align:center;vertical-align:middle;}
+.spec-label{display:block;font-size:8.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#777;margin-bottom:5px;}
+.spec-value{display:block;font-size:15px;font-weight:700;color:#1A1A1A;line-height:1.25;}
+.spec-value small{font-size:10px;font-weight:400;color:#999;display:block;margin-top:2px;}
+.nl-contact{padding:26px 28px 22px;background:#F9F9F9;border-bottom:1px solid #E4E4E4;text-align:center;border-top:1px solid #E4E4E4;}
+.broker-display{font-size:13px;color:#777;margin-bottom:16px;}
+.broker-display strong{color:#1A1A1A;font-weight:700;}
+.nl-contact-btn{display:inline-block;background:#6B5CE7;color:white;padding:12px 52px;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;border-radius:3px;}
+.nl-footer{background:#1B8097;padding:16px 28px;text-align:center;}
+.nl-footer p{font-size:10px;color:rgba(255,255,255,.45);line-height:1.8;}
+.nl-footer a{color:rgba(255,255,255,.55);text-decoration:underline;}
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:#1B8097;color:white;padding:12px 28px;font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;border-radius:3px;z-index:999;transition:transform .35s cubic-bezier(.34,1.56,.64,1);white-space:nowrap;}
+#toast.show{transform:translateX(-50%) translateY(0);}
+#toast.error{background:#c0392b;}
+.field-error-msg{font-size:10px;color:#c0392b;font-weight:700;margin-top:4px;display:block;}
+.field input.field-error,.field textarea.field-error,.url-photo-field input.field-error{border-color:#c0392b !important;}
+#validation-errors{display:none;background:#fff5f5;border:1.5px solid #f5c6cb;border-radius:4px;padding:12px 16px;margin-bottom:14px;}
+#validation-errors .ve-title{font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:#c0392b;margin-bottom:8px;}
+#validation-errors ul{list-style:none;padding:0;}
+#validation-errors ul li{font-size:12px;color:#c0392b;padding:3px 0;padding-left:14px;position:relative;}
+#validation-errors ul li::before{content:"×";position:absolute;left:0;font-weight:700;}
+#autosave-banner{display:none;position:fixed;top:12px;right:16px;background:rgba(27,128,151,.9);color:white;padding:7px 14px;font-size:9px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;border-radius:3px;z-index:998;transition:opacity .4s;}
+#autosave-banner.fading{opacity:0;}
+
+/* Listing modes */
+.mode-selector{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:4px;}
+.mode-btn{padding:6px 12px;border-radius:3px;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;border:1.5px solid #DDD;background:white;color:#999;transition:all .18s;font-family:Arial,sans-serif;}
+.mode-btn:hover{opacity:.85;}
+.mode-btn.active{color:white;border-color:transparent;}
+.mode-new-listing   .mode-btn[data-mode="new_listing"],
+.mode-price-reduction .mode-btn[data-mode="price_reduction"],
+.mode-open-day      .mode-btn[data-mode="open_day"],
+.mode-charter       .mode-btn[data-mode="charter"],
+.mode-sold          .mode-btn[data-mode="sold"],
+.mode-wanted        .mode-btn[data-mode="wanted"],
+.mode-shipyard      .mode-btn[data-mode="shipyard"]{color:white;border-color:transparent;}
+
+/* Badge colors per mode */
+.badge-new_listing   {background:#1B8097;}
+.badge-price_reduction{background:#E8430A;}
+.badge-open_day      {background:#8B5CF6;}
+.badge-charter       {background:#0D9488;}
+.badge-sold          {background:#374151;}
+.badge-wanted        {background:#D97706;}
+.badge-shipyard      {background:#1D4ED8;}
+
+/* Drag & drop */
+.vessel-card.dragging{opacity:.4;border:2px dashed var(--moana);}
+.vessel-card.drag-over{border-top:3px solid var(--moana);}
+.drag-handle{cursor:grab;font-size:16px;color:#C0CED2;padding:0 4px;flex-shrink:0;transition:color .2s;}
+.drag-handle:hover{color:var(--moana);}
+.drag-handle:active{cursor:grabbing;}
+
+/* Duplicate button */
+.btn-dup-vessel{background:none;border:1px solid #D0E8EE;border-radius:3px;color:#1B8097;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:5px 11px;cursor:pointer;transition:all .2s;white-space:nowrap;}
+.btn-dup-vessel:hover{background:#EEF7FA;border-color:var(--moana);}
+
+/* Language toggle */
+#lang-toggle{display:flex;align-items:center;gap:8px;margin-bottom:16px;}
+#lang-toggle span{font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:#777;}
+.lang-btn{padding:6px 14px;border-radius:3px;font-size:11px;font-weight:700;border:1px solid #DDD;background:white;cursor:pointer;transition:all .2s;letter-spacing:.08em;}
+.lang-btn.active{background:var(--moana);color:white;border-color:var(--moana);}
+.lang-btn:not(.active):hover{border-color:var(--moana);color:var(--moana);}
+
+/* History panel */
+#history-panel{display:none;position:fixed;top:0;right:0;width:320px;height:100vh;background:white;border-left:1px solid #DDD;box-shadow:-4px 0 20px rgba(0,0,0,.08);z-index:1000;flex-direction:column;}
+#history-panel.open{display:flex;}
+#history-header{padding:16px 18px;border-bottom:1px solid #EEE;display:flex;align-items:center;justify-content:space-between;}
+#history-header h3{font-size:13px;font-weight:700;color:var(--moana);}
+#btn-close-history{background:none;border:none;font-size:18px;cursor:pointer;color:#999;}
+#history-list{flex:1;overflow-y:auto;padding:12px;}
+.hist-item{border:1px solid #EEE;border-radius:4px;padding:12px 14px;margin-bottom:8px;cursor:pointer;transition:border-color .2s;}
+.hist-item:hover{border-color:var(--moana);}
+.hist-date{font-size:9px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:#999;margin-bottom:4px;}
+.hist-name{font-size:12px;font-weight:700;color:#1A1A1A;}
+.hist-sub{font-size:11px;color:#999;margin-top:2px;}
+.hist-actions{display:flex;gap:6px;margin-top:8px;}
+.hist-btn{font-size:10px;padding:4px 10px;border-radius:3px;cursor:pointer;font-weight:700;border:1px solid #DDD;background:none;color:#666;transition:all .2s;}
+.hist-btn:hover{border-color:var(--moana);color:var(--moana);}
+.hist-btn.del:hover{border-color:#c0392b;color:#c0392b;}
+#history-empty{text-align:center;padding:40px 20px;color:#BBB;font-size:12px;}
+.btn-history{padding:13px 16px;background:white;border:1px solid #CCC;border-radius:3px;color:var(--muted);font-family:Arial,Helvetica,sans-serif;font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;cursor:pointer;transition:all .2s;white-space:nowrap;}
+.btn-history:hover{border-color:var(--moana);color:var(--moana);}
+
+/* Mobile preview toggle */
+.preview-toggle{display:flex;gap:0;margin-bottom:16px;border:1px solid #DDD;border-radius:4px;overflow:hidden;width:fit-content;}
+.ptog-btn{padding:8px 16px;font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;border:none;background:white;cursor:pointer;color:#999;transition:all .2s;font-family:Arial,sans-serif;}
+.ptog-btn.active{background:var(--moana);color:white;}
+#nl-render.mobile-view .nl{max-width:375px;}
+</style>
+</head>
+<body>
+<div id="pw-screen" style="position:fixed;inset:0;background:#0F1923;display:flex;align-items:center;justify-content:center;z-index:9999;">
+  <div style="background:#1A2633;border:1px solid #2A3A4A;border-radius:12px;padding:48px 40px;width:360px;text-align:center;">
+    <img src="https://mcusercontent.com/b93755a080e6f9a4ddedeb6fb/images/6b05698c-e3f1-f7bc-b865-6333d89cf634.jpg" style="height:48px;margin-bottom:28px;"/>
+    <div style="font-size:13px;color:#8A9BB0;margin-bottom:24px;letter-spacing:.08em;text-transform:uppercase;">Newsletter Builder</div>
+    <input id="pw-input" type="password" placeholder="Mot de passe" onkeydown="if(event.key==='Enter')checkPw()"
+      style="width:100%;padding:11px 14px;border:1px solid #2A3A4A;border-radius:6px;background:#0F1923;color:#fff;font-size:14px;margin-bottom:12px;box-sizing:border-box;outline:none;"/>
+    <button onclick="checkPw()"
+      style="width:100%;padding:11px;background:#6B5CE7;color:#fff;border:none;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;letter-spacing:.1em;text-transform:uppercase;">
+      ACCÉDER
+    </button>
+    <div id="pw-error" style="color:#E05A5A;font-size:12px;margin-top:10px;min-height:16px;"></div>
+  </div>
+</div>
+
+<script>
+function checkPw() {
+  const val = document.getElementById('pw-input').value;
+  if (val === 'moanayatchingsurf8!') {
+    document.getElementById('pw-screen').style.display = 'none';
+    sessionStorage.setItem('mona_auth', '1');
+  } else {
+    document.getElementById('pw-error').textContent = 'Mot de passe incorrect.';
+    document.getElementById('pw-input').value = '';
+  }
+}
+window.addEventListener('DOMContentLoaded', function() {
+  if (sessionStorage.getItem('mona_auth') === '1') {
+    document.getElementById('pw-screen').style.display = 'none';
+  }
+});
+</script>
+
+
+<div id="step-form">
+  <div class="form-header">
+    <img id="logo-preview-img" src="" alt="Moana Yachting" style="width:100%;display:block;border-radius:4px 4px 0 0;"/>
+  </div>
+  <div class="form-body">
+    <div class="form-title">Create a newsletter</div>
+    <div class="form-subtitle">Fill in the introduction, add as many vessels as needed, then generate.</div>
+
+    <!-- Logo URL field -->
+    <div class="intro-section" style="margin-bottom:16px;">
+      <div class="sttl">Logo</div>
+      <div class="field">
+        <label>Logo URL (Mailchimp Content Studio)</label>
+        <input type="text" id="f-logo-url" value="https://mcusercontent.com/b93755a080e6f9a4ddedeb6fb/_thumbs/6b05698c-e3f1-f7bc-b865-6333d89cf634.jpg" oninput="updateLogo(this.value)"/>
+        <img id="logo-field-thumb" style="width:100%;max-height:60px;object-fit:contain;margin-top:8px;display:none;background:#1B8097;padding:8px;border-radius:3px;"/>
+      </div>
+    </div>
+    <div class="banner banner-blue">
+      <div class="emoji">📸</div>
+      <div class="txt">
+        <div class="ttl">Photos — Upload to Mailchimp Content Studio first</div>
+        <div class="sub">Uploadez vos photos dans <strong>Content Studio</strong>, puis clic droit sur la photo → <strong>"Ouvrir dans un nouvel onglet"</strong> → copiez l'URL.</div>
+      </div>
+      <a href="https://login.mailchimp.com" target="_blank">Open →</a>
+    </div>
+
+    <div id="lang-toggle">
+      <span>Language :</span>
+      <button class="lang-btn active" id="lang-en" onclick="setLang('en')">🇬🇧 EN</button>
+      <button class="lang-btn" id="lang-fr" onclick="setLang('fr')">🇫🇷 FR</button>
+    </div>
+
+    <div class="intro-section">
+      <div class="sttl">Introduction</div>
+      <div class="field"><label>Line 1</label><input type="text" id="f-intro1" value="Moana Yachting is pleased to present a selection of exceptional yachts currently available on the market."/></div>
+      <div class="field"><label>Line 2</label><input type="text" id="f-intro2" value="From sleek performance yachts to refined cruising vessels, each offers a unique opportunity for discerning owners."/></div>
+    </div>
+
+    <div id="vessels-list" class="vessels-list"></div>
+    <button class="btn-add-vessel" onclick="addVessel()">+ Add a vessel</button>
+    <div id="validation-errors">
+      <div class="ve-title">⚠ Champs requis manquants</div>
+      <ul id="validation-errors-list"></ul>
+    </div>
+    <button class="btn-generate" onclick="generateNewsletter()">→ Generate newsletter</button>
+  </div>
+</div>
+<div id="autosave-banner">Brouillon sauvegardé ✓</div>
+
+<div id="step-preview">
+  <div class="preview-actions">
+    <button class="btn-back" onclick="goBack()">← Edit</button>
+    <button class="btn-history" onclick="toggleHistory()">📋 History</button>
+    <button class="btn-copy-html" onclick="copyHTML()">⧉ Copy email HTML</button>
+  </div>
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+    <div class="preview-toggle">
+      <button class="ptog-btn active" onclick="setPreviewMode('desktop',this)">🖥 Desktop</button>
+      <button class="ptog-btn" onclick="setPreviewMode('mobile',this)">📱 Mobile</button>
+    </div>
+  </div>
+  <div id="nl-render"></div>
+</div>
+<div id="toast">HTML copied!</div>
+
+<div id="history-panel">
+  <div id="history-header">
+    <h3>📋 Newsletter History</h3>
+    <button id="btn-close-history" onclick="toggleHistory()">✕</button>
+  </div>
+  <div id="history-list"><div id="history-empty">Aucune newsletter sauvegardée.</div></div>
+</div>
+
+<script>
+const LOGO_B64 = "";
+let vesselCount = 0;
+let currentLang = 'en';
+
+// ── Language texts ─────────────────────────────────────────────────────────
+const LANG = {
+  en: {
+    intro1_single: "Moana Yachting is pleased to present an exceptional yacht currently available on the market.",
+    intro2_single: "This yacht offers a unique opportunity for a discerning owner.",
+    intro1_multi:  "Moana Yachting is pleased to present a selection of exceptional yachts currently available on the market.",
+    intro2_multi:  "From sleek performance yachts to refined cruising vessels, each offers a unique opportunity for discerning owners.",
+    contact_btn:   "Contact",
+    unsubscribe:   "Unsubscribe",
+    our_fleet:     "Our fleet",
+    rights:        "All rights reserved",
+    broker_label:  "Broker",
+    price_label:   "Price",
+    location_label:"Location",
+    description_lbl:"Description",
+    highlights_lbl: "Key Highlights",
+    specs_lbl:     "Specifications",
+  },
+  fr: {
+    intro1_single: "Moana Yachting est heureuse de vous présenter un yacht exceptionnel actuellement disponible sur le marché.",
+    intro2_single: "Ce yacht représente une opportunité unique pour un propriétaire exigeant.",
+    intro1_multi:  "Moana Yachting est heureuse de vous présenter une sélection de yachts exceptionnels actuellement disponibles sur le marché.",
+    intro2_multi:  "Des yachts de performance aux voiliers de croisière raffinés, chacun offre une opportunité unique pour les propriétaires les plus exigeants.",
+    contact_btn:   "Contact",
+    unsubscribe:   "Se désabonner",
+    our_fleet:     "Notre flotte",
+    rights:        "Tous droits réservés",
+    broker_label:  "Broker",
+    price_label:   "Prix",
+    location_label:"Localisation",
+    description_lbl:"Description",
+    highlights_lbl: "Points clés",
+    specs_lbl:     "Spécifications",
+  }
+};
+
+function setLang(lang) {
+  currentLang = lang;
+  document.getElementById('lang-en').classList.toggle('active', lang === 'en');
+  document.getElementById('lang-fr').classList.toggle('active', lang === 'fr');
+  updateIntroFields();
+}
+
+// ── History ────────────────────────────────────────────────────────────────
+function getHistory() {
+  try { return JSON.parse(localStorage.getItem('moana_history') || '[]'); } catch(e) { return []; }
+}
+function saveHistory() {
+  const history = getHistory();
+  const cards = document.querySelectorAll('.vessel-card');
+  const names = Array.from(cards).map(c => {
+    const vid = c.id.replace('vessel-','');
+    return g('v'+vid+'-name') || 'Unnamed';
+  });
+  const entry = {
+    id: Date.now(),
+    date: new Date().toLocaleDateString('fr-FR', {day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}),
+    vessels: names,
+    html: window._nlHTML || ''
+  };
+  history.unshift(entry);
+  if (history.length > 20) history.pop();
+  try { localStorage.setItem('moana_history', JSON.stringify(history)); } catch(e) {}
+  renderHistory();
+}
+function renderHistory() {
+  const list = document.getElementById('history-list');
+  const history = getHistory();
+  if (!history.length) { list.innerHTML = '<div id="history-empty">Aucune newsletter sauvegardée.</div>'; return; }
+  list.innerHTML = history.map(e => `
+    <div class="hist-item">
+      <div class="hist-date">${e.date}</div>
+      <div class="hist-name">${e.vessels.length} bateau${e.vessels.length>1?'x':''}</div>
+      <div class="hist-sub">${e.vessels.join(' · ')}</div>
+      <div class="hist-actions">
+        <button class="hist-btn" onclick="previewFromHistory(${e.id})">👁 Voir</button>
+        <button class="hist-btn" onclick="copyFromHistory(${e.id})">⧉ Copier HTML</button>
+        <button class="hist-btn del" onclick="deleteHistory(${e.id})">✕</button>
+      </div>
+    </div>`).join('');
+}
+function toggleHistory() {
+  const p = document.getElementById('history-panel');
+  p.classList.toggle('open');
+  if (p.classList.contains('open')) renderHistory();
+}
+function previewFromHistory(id) {
+  const entry = getHistory().find(e => e.id === id);
+  if (!entry) return;
+  window._nlHTML = entry.html;
+  document.getElementById('nl-render').innerHTML = entry.html;
+  document.getElementById('step-form').style.display = 'none';
+  document.getElementById('step-preview').style.display = 'block';
+  document.getElementById('history-panel').classList.remove('open');
+  window.scrollTo(0,0);
+}
+function copyFromHistory(id) {
+  const entry = getHistory().find(e => e.id === id);
+  if (!entry) return;
+  window._nlHTML = entry.html;
+  copyHTML();
+}
+function deleteHistory(id) {
+  let history = getHistory().filter(e => e.id !== id);
+  try { localStorage.setItem('moana_history', JSON.stringify(history)); } catch(e) {}
+  renderHistory();
+}
+
+// ── Mobile preview ─────────────────────────────────────────────────────────
+function setPreviewMode(mode, btn) {
+  document.querySelectorAll('.ptog-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const render = document.getElementById('nl-render');
+  render.classList.toggle('mobile-view', mode === 'mobile');
+}
+
+// ── Duplicate vessel ───────────────────────────────────────────────────────
+function duplicateVessel(vid) {
+  // Collect all field values from source vessel
+  const fields = {};
+  const sourceCard = document.getElementById('vessel-'+vid);
+  sourceCard.querySelectorAll('input[id], textarea[id]').forEach(el => {
+    const key = el.id.replace('v'+vid+'-', '');
+    fields[key] = el.value;
+  });
+  // Collect highlights
+  const highlights = Array.from(sourceCard.querySelectorAll('.hl-row input')).map(i => i.value);
+  // Add new vessel then fill it
+  addVessel();
+  const newVid = vesselCount;
+  Object.entries(fields).forEach(([key, val]) => {
+    const el = document.getElementById('v'+newVid+'-'+key);
+    if (el) el.value = val;
+  });
+  // Fill highlights (3 already added by addVessel, fill them + add more if needed)
+  const hlContainer = document.getElementById('hl-container-'+newVid);
+  const existingRows = hlContainer.querySelectorAll('.hl-row input');
+  highlights.forEach((val, i) => {
+    if (i < existingRows.length) { existingRows[i].value = val; }
+    else { addHL(newVid, val); }
+  });
+  updateVesselTitle(newVid);
+  showToast('Vessel duplicated!');
+}
+
+// ── Drag & drop reorder ────────────────────────────────────────────────────
+let dragSrc = null;
+function initDrag(card) {
+  const handle = card.querySelector('.drag-handle');
+  card.setAttribute('draggable','false');
+  handle.addEventListener('mousedown', () => card.setAttribute('draggable','true'));
+  handle.addEventListener('mouseup',   () => card.setAttribute('draggable','false'));
+  card.addEventListener('dragstart', e => {
+    dragSrc = card;
+    setTimeout(() => card.classList.add('dragging'), 0);
+    e.dataTransfer.effectAllowed = 'move';
+  });
+  card.addEventListener('dragend', () => {
+    card.classList.remove('dragging');
+    card.setAttribute('draggable','false');
+    document.querySelectorAll('.vessel-card').forEach(c => c.classList.remove('drag-over'));
+    dragSrc = null;
+  });
+  card.addEventListener('dragover', e => {
+    e.preventDefault();
+    if (dragSrc && dragSrc !== card) {
+      document.querySelectorAll('.vessel-card').forEach(c => c.classList.remove('drag-over'));
+      card.classList.add('drag-over');
+    }
+  });
+  card.addEventListener('drop', e => {
+    e.preventDefault();
+    if (dragSrc && dragSrc !== card) {
+      const list = document.getElementById('vessels-list');
+      const cards = [...list.querySelectorAll('.vessel-card')];
+      const srcIdx = cards.indexOf(dragSrc);
+      const tgtIdx = cards.indexOf(card);
+      if (srcIdx < tgtIdx) card.after(dragSrc);
+      else card.before(dragSrc);
+    }
+    document.querySelectorAll('.vessel-card').forEach(c => c.classList.remove('drag-over'));
+  });
+}
+const MODES = {
+  new_listing:     { label:"NEW LISTING",       color:"#1B8097", emoji:"🆕",
+    intro_en: "Moana Yachting is pleased to present this exceptional new listing, now available on the market.",
+    intro_fr: "Moana Yachting est heureuse de vous présenter cette nouvelle exclusivité, désormais disponible sur le marché." },
+  price_reduction: { label:"PRICE REDUCTION",   color:"#E8430A", emoji:"🔻",
+    intro_en: "Moana Yachting announces a significant price reduction on this outstanding vessel — an exceptional opportunity not to be missed.",
+    intro_fr: "Moana Yachting annonce une importante réduction de prix sur ce yacht remarquable — une opportunité exceptionnelle à ne pas manquer." },
+  open_day:        { label:"OPEN DAY",           color:"#8B5CF6", emoji:"📅",
+    intro_en: "You are cordially invited to an exclusive Open Day aboard this exceptional vessel. Come and experience her firsthand.",
+    intro_fr: "Vous êtes cordialement invité(e) à une journée portes ouvertes exclusive à bord de ce yacht exceptionnel." },
+  charter:         { label:"CHARTER",            color:"#0D9488", emoji:"⛵",
+    intro_en: "Moana Yachting is delighted to offer this magnificent yacht for charter — an unrivalled experience on the water.",
+    intro_fr: "Moana Yachting est heureuse de proposer ce magnifique yacht à la location — une expérience inégalée sur l'eau." },
+  sold:            { label:"SOLD",               color:"#374151", emoji:"✅",
+    intro_en: "Moana Yachting is proud to announce the successful sale of this exceptional vessel. Congratulations to both parties.",
+    intro_fr: "Moana Yachting est fière d'annoncer la vente réussie de ce yacht exceptionnel. Félicitations aux deux parties." },
+  wanted:          { label:"WANTED",             color:"#D97706", emoji:"🔍",
+    intro_en: "Our client is actively seeking a yacht matching the following criteria. Do not hesitate to contact us if you have a suitable vessel.",
+    intro_fr: "Notre client recherche activement un yacht correspondant aux critères suivants. N'hésitez pas à nous contacter si vous disposez d'un bateau correspondant." },
+  shipyard:        { label:"SHIPYARD SPOTLIGHT", color:"#1D4ED8", emoji:"🏗",
+    intro_en: "Moana Yachting is proud to spotlight this exceptional build — a testament to craftsmanship and naval innovation.",
+    intro_fr: "Moana Yachting est fière de mettre en lumière cette réalisation exceptionnelle — un témoignage du savoir-faire et de l'innovation navale." },
+};
+
+function setMode(vid, mode) {
+  const hidden = document.getElementById("v"+vid+"-mode");
+  if (hidden) hidden.value = mode;
+  const selector = document.getElementById("mode-selector-"+vid);
+  if (!selector) return;
+  const cfg = MODES[mode];
+  selector.querySelectorAll(".mode-btn").forEach(btn => {
+    const isActive = btn.dataset.mode === mode;
+    btn.classList.toggle("active", isActive);
+    btn.style.background = isActive ? cfg.color : "";
+    btn.style.color = isActive ? "white" : "";
+  });
+  // Update vcname badge in card header
+  const card = document.getElementById("vessel-"+vid);
+  if (card) {
+    let badge = card.querySelector(".mode-header-badge");
+    if (!badge) {
+      badge = document.createElement("span");
+      badge.className = "mode-header-badge";
+      badge.style.cssText = "font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;padding:3px 8px;border-radius:2px;color:white;flex-shrink:0;";
+      card.querySelector(".vessel-card-header").insertBefore(badge, card.querySelector(".vc-toggle"));
+    }
+    badge.textContent = cfg.emoji + " " + cfg.label;
+    badge.style.background = cfg.color;
+  }
+}
+
+const HL_PH = ["ex: Low engine hours","ex: Turnkey condition & Ready for the Season","ex: Spacious flybridge and generous exterior decks","ex: Elegant, light-filled salon with premium finishes"];
+
+function updateLogo(url) {
+  const img = document.getElementById('logo-preview-img');
+  const thumb = document.getElementById('logo-field-thumb');
+  if (url && url.startsWith('http')) {
+    img.src = url;
+    img.style.display = 'block';
+    img.onerror = () => { img.style.display = 'none'; };
+    if(thumb){thumb.src=url;thumb.style.display='block';}
+  } else {
+    img.src=''; img.style.display='none';
+    if(thumb) thumb.style.display = 'none';
+  }
+}
+
+function updateIntroFields() {
+  const count = document.querySelectorAll(".vessel-card").length;
+  const i1 = document.getElementById("f-intro1");
+  const i2 = document.getElementById("f-intro2");
+  if (!i1 || !i2) return;
+  const L = LANG[currentLang];
+  i1.value = count <= 1 ? L.intro1_single : L.intro1_multi;
+  i2.value = count <= 1 ? L.intro2_single : L.intro2_multi;
+}
+
+function addVessel() {
+  vesselCount++;
+  const vid = vesselCount;
+  const card = document.createElement("div");
+  card.className = "vessel-card";
+  card.id = "vessel-" + vid;
+  card.innerHTML = `
+    <div class="vessel-card-header" onclick="toggleVessel(${vid})">
+      <div class="drag-handle" draggable="true" onmousedown="event.stopPropagation()" title="Drag to reorder">⠿</div>
+      <div class="vcnum">${vid}</div>
+      <div class="vcname" id="vcname-${vid}">New vessel<span class="vcname-sub">· Vessel ${vid}</span></div>
+      <div class="vc-toggle open" id="vctog-${vid}">▾</div>
+      <button class="btn-dup-vessel" onclick="event.stopPropagation();duplicateVessel(${vid})" title="Duplicate">⧉ Dup.</button>
+      ${vid > 1 ? `<button class="btn-rm-vessel" onclick="event.stopPropagation();removeVessel(${vid})">✕ Remove</button>` : ""}
+    </div>
+    <div class="vessel-card-body open" id="vcbody-${vid}">
+
+      <div style="display:flex;gap:8px;margin-bottom:16px;">
+        <button onclick="setVesselMode('${vid}','manual')" id="vmode-manual-${vid}"
+          style="flex:1;padding:9px;border:2px solid #6B5CE7;background:#6B5CE7;color:#fff;border-radius:5px;font-size:11px;font-weight:700;cursor:pointer;letter-spacing:.06em;">
+          ✏️ REMPLIR MANUELLEMENT
+        </button>
+        <button onclick="setVesselMode('${vid}','pdf')" id="vmode-pdf-${vid}"
+          style="flex:1;padding:9px;border:2px solid #DDD;background:#fff;color:#999;border-radius:5px;font-size:11px;font-weight:700;cursor:pointer;letter-spacing:.06em;">
+          📄 IMPORTER UN PDF
+        </button>
+      </div>
+
+      <div id="vzone-pdf-${vid}" style="display:none;">
+        <div class="vsection" style="border:2px dashed #C8B8F8;background:#FAF8FF;border-radius:8px;padding:18px 20px;">
+          <div class="sttl" style="color:#6B5CE7;">📄 Import PDF Brochure</div>
+          <div id="pdf-drop-${vid}"
+            ondragover="event.preventDefault();this.style.background='#EDE9FF';"
+            ondragleave="this.style.background='transparent';"
+            ondrop="handlePdfDrop(event,'${vid}')"
+            style="border:2px dashed #B0A0E8;border-radius:6px;padding:22px;text-align:center;cursor:pointer;background:transparent;transition:background .2s;">
+            <div style="font-size:28px;margin-bottom:6px;">📄</div>
+            <div style="font-size:12px;color:#888;font-weight:600;letter-spacing:.05em;">Glisser le PDF ici</div>
+            <div style="font-size:11px;color:#AAA;margin-top:4px;">ou</div>
+            <label style="display:inline-block;margin-top:8px;padding:6px 18px;background:#6B5CE7;color:#fff;border-radius:4px;font-size:11px;font-weight:700;cursor:pointer;letter-spacing:.08em;">
+              CHOISIR UN FICHIER
+              <input type="file" accept=".pdf" style="display:none;" onchange="handlePdfFile(this,'${vid}')"/>
+            </label>
+          </div>
+          <div id="pdf-status-${vid}" style="font-size:12px;color:#6B5CE7;margin-top:10px;text-align:center;min-height:18px;"></div>
+        </div>
+      </div>
+
+      <div id="vzone-manual-${vid}">
+      <div class="vsection">
+        <div class="sttl">Vessel</div>
+        <div class="field" style="margin-bottom:10px;">
+          <label>Listing Mode</label>
+          <div class="mode-selector" id="mode-selector-${vid}">
+            <button class="mode-btn active" data-mode="new_listing"      style="background:#1B8097;"  onclick="setMode(${vid},'new_listing')">🆕 New Listing</button>
+            <button class="mode-btn"        data-mode="price_reduction"  style=""                     onclick="setMode(${vid},'price_reduction')">🔻 Price Reduction</button>
+            <button class="mode-btn"        data-mode="open_day"         style=""                     onclick="setMode(${vid},'open_day')">📅 Open Day</button>
+            <button class="mode-btn"        data-mode="charter"          style=""                     onclick="setMode(${vid},'charter')">⛵ Charter</button>
+            <button class="mode-btn"        data-mode="sold"             style=""                     onclick="setMode(${vid},'sold')">✅ Sold</button>
+            <button class="mode-btn"        data-mode="wanted"           style=""                     onclick="setMode(${vid},'wanted')">🔍 Wanted</button>
+            <button class="mode-btn"        data-mode="shipyard"         style=""                     onclick="setMode(${vid},'shipyard')">🏗 Shipyard Spotlight</button>
+          </div>
+          <input type="hidden" id="v${vid}-mode" value="new_listing"/>
+        </div>
+        <div class="g2">
+          <div class="field"><label>Vessel Name</label><input type="text" id="v${vid}-name" placeholder="ex: MY FRIDAY" oninput="updateVesselTitle(${vid})"/></div>
+          <div class="field"><label>Displayed Price</label><input type="text" id="v${vid}-price" placeholder="ex: 4,690,000 € VAT Unpaid"/></div>
+        </div>
+      </div>
+
+      <div class="vsection">
+        <div class="sttl">Photos — Mailchimp Content Studio URLs</div>
+        <div class="field" style="margin-bottom:12px;">
+          <label>Main photo (hero)</label>
+          <input type="text" id="v${vid}-photo-hero" placeholder="https://mcusercontent.com/..." oninput="previewUrl('v${vid}-photo-hero','v${vid}-thumb-hero')"/>
+          <img id="v${vid}-thumb-hero" class="preview-thumb"/>
+        </div>
+        <span class="sub-label">Exterior photos</span>
+        <div class="url-photo-grid" style="margin-bottom:12px;">
+          <div class="url-photo-field">
+            <label>Ext. 1</label>
+            <input type="text" id="v${vid}-photo-ext1" placeholder="https://mcusercontent.com/..." oninput="previewUrl('v${vid}-photo-ext1','v${vid}-thumb-ext1')"/>
+            <img id="v${vid}-thumb-ext1" class="preview-thumb"/>
+          </div>
+          <div class="url-photo-field">
+            <label>Ext. 2</label>
+            <input type="text" id="v${vid}-photo-ext2" placeholder="https://mcusercontent.com/..." oninput="previewUrl('v${vid}-photo-ext2','v${vid}-thumb-ext2')"/>
+            <img id="v${vid}-thumb-ext2" class="preview-thumb"/>
+          </div>
+        </div>
+        <span class="sub-label">Interior photos</span>
+        <div class="url-photo-grid three">
+          <div class="url-photo-field">
+            <label>Int. 1</label>
+            <input type="text" id="v${vid}-photo-int1" placeholder="https://mcusercontent.com/..." oninput="previewUrl('v${vid}-photo-int1','v${vid}-thumb-int1')"/>
+            <img id="v${vid}-thumb-int1" class="preview-thumb"/>
+          </div>
+          <div class="url-photo-field">
+            <label>Int. 2</label>
+            <input type="text" id="v${vid}-photo-int2" placeholder="https://mcusercontent.com/..." oninput="previewUrl('v${vid}-photo-int2','v${vid}-thumb-int2')"/>
+            <img id="v${vid}-thumb-int2" class="preview-thumb"/>
+          </div>
+          <div class="url-photo-field">
+            <label>Int. 3</label>
+            <input type="text" id="v${vid}-photo-int3" placeholder="https://mcusercontent.com/..." oninput="previewUrl('v${vid}-photo-int3','v${vid}-thumb-int3')"/>
+            <img id="v${vid}-thumb-int3" class="preview-thumb"/>
+          </div>
+        </div>
+      </div>
+
+      <div class="vsection">
+        <div class="sttl">Description</div>
+        <div class="field"><label>Paragraph 1</label><textarea id="v${vid}-desc1" placeholder="ex: Built in 2017 by Sanlorenzo..."></textarea></div>
+        <div class="field"><label>Paragraph 2 (optional)</label><textarea id="v${vid}-desc2" placeholder="ex: Fully ready for the upcoming season..."></textarea></div>
+        <div class="field"><label>Paragraph 3 (optional)</label><textarea id="v${vid}-desc3" placeholder="ex: An ideal opportunity for buyers seeking..."></textarea></div>
+      </div>
+
+      <div class="vsection">
+        <div class="sttl">Location</div>
+        <div class="field"><label>Port / City</label><input type="text" id="v${vid}-location" placeholder="ex: Cannes"/></div>
+      </div>
+
+      <div class="vsection">
+        <div class="sttl">Key Highlights</div>
+        <div id="hl-container-${vid}"></div>
+        <button class="btn-add-hl" onclick="addHL(${vid})">+ Add key highlight</button>
+      </div>
+
+      <div class="vsection">
+        <div class="sttl">Technical Specifications</div>
+        <div class="g3">
+          <div class="field"><label>Asking Price</label><input type="text" id="v${vid}-sp-price" placeholder="4,690,000 €"/></div>
+          <div class="field"><label>VAT</label><input type="text" id="v${vid}-vat" placeholder="VAT Unpaid"/></div>
+          <div class="field"><label>Builder</label><input type="text" id="v${vid}-builder" placeholder="Sanlorenzo"/></div>
+        </div>
+        <div class="g3">
+          <div class="field"><label>Built</label><input type="text" id="v${vid}-built" placeholder="2017"/></div>
+          <div class="field"><label>Max Speed</label><input type="text" id="v${vid}-speed" placeholder="27 Kn"/></div>
+          <div class="field"><label>Cruising Speed</label><input type="text" id="v${vid}-cruise" placeholder="26/27 kn"/></div>
+        </div>
+        <div class="g3">
+          <div class="field"><label>Guest Cabins</label><input type="text" id="v${vid}-cabins" placeholder="4"/></div>
+          <div class="field"><label>Guest Heads</label><input type="text" id="v${vid}-heads" placeholder="6"/></div>
+          <div class="field"><label>Pax Max</label><input type="text" id="v${vid}-pax" placeholder="14"/></div>
+        </div>
+        <div class="g3">
+          <div class="field"><label>LOA</label><input type="text" id="v${vid}-loa" placeholder="28.96 m"/></div>
+          <div class="field"><label>Beam</label><input type="text" id="v${vid}-beam" placeholder="6.75 m"/></div>
+          <div class="field"><label>Draft</label><input type="text" id="v${vid}-draft" placeholder="1.93 m"/></div>
+        </div>
+        <div class="g3">
+          <div class="field"><label>Gross Tonnage</label><input type="text" id="v${vid}-tonnage" placeholder="160"/></div>
+          <div class="field"><label>Engines</label><input type="text" id="v${vid}-engines" placeholder="2× Volvo V6"/></div>
+          <div class="field"><label>HP</label><input type="text" id="v${vid}-hp" placeholder="2× 480 cv"/></div>
+        </div>
+        <div class="g3">
+          <div class="field"><label>Range</label><input type="text" id="v${vid}-range" placeholder="320 nm"/></div>
+          <div class="field"><label>Fuel Capacity</label><input type="text" id="v${vid}-fuel" placeholder="1358 L"/></div>
+          <div class="field"><label>Fuel Consumption</label><input type="text" id="v${vid}-conso" placeholder="120 l/h"/></div>
+        </div>
+        <div class="g3">
+          <div class="field"><label>Fresh Water</label><input type="text" id="v${vid}-water" placeholder="300 L"/></div>
+          <div class="field"><label>Black Water</label><input type="text" id="v${vid}-blackwater" placeholder="227 L"/></div>
+          <div class="field"><label>Generator</label><input type="text" id="v${vid}-gen" placeholder="8.5 kw"/></div>
+        </div>
+        <div class="g3">
+          <div class="field"><label>Generator Hours</label><input type="text" id="v${vid}-genhours" placeholder="520 h"/></div>
+          <div class="field"><label>Anchor Chain</label><input type="text" id="v${vid}-chain" placeholder="50 m"/></div>
+          <div class="field"><label>Services</label><input type="text" id="v${vid}-services" placeholder="Annually"/></div>
+        </div>
+        <div class="g3">
+          <div class="field"><label>Air Conditioning</label><input type="text" id="v${vid}-clim" placeholder="Service"/></div>
+          <div class="field"><label>Joystick</label><input type="text" id="v${vid}-joystick" placeholder="Yes"/></div>
+          <div class="field"><label>Bow Thruster</label><input type="text" id="v${vid}-bow" placeholder="Yes"/></div>
+        </div>
+        <div class="g3">
+          <div class="field"><label>Radar</label><input type="text" id="v${vid}-radar" placeholder="Yes"/></div>
+          <div class="field"><label>Stabilizer</label><input type="text" id="v${vid}-stabilizer" placeholder="Yes"/></div>
+          <div class="field"></div>
+        </div>
+      </div>
+
+      <div class="vsection">
+        <div class="sttl">Brochures</div>
+        <div class="g2">
+          <div class="field"><label>Lien Brochure</label><input type="text" id="v${vid}-brochure-url" placeholder="https://..."/></div>
+          <div class="field"><label>Lien Brochure BF</label><input type="text" id="v${vid}-brochure-bf-url" placeholder="https://..."/></div>
+        </div>
+      </div>
+
+      <div class="vsection">
+        <div class="sttl">Broker Listing</div>
+        <div class="field" style="margin-bottom:10px;">
+          <label>Sélectionner un broker</label>
+          <select id="v${vid}-broker-select" onchange="selectBroker('${vid}', this.value)" style="width:100%;padding:8px 10px;border:1px solid #DDD;border-radius:4px;font-size:13px;color:#333;background:#FFF;cursor:pointer;">
+            <option value="">— Choisir un broker —</option>
+            <option value="Aldric Millescamps|+33 6 40 95 30 88">Aldric Millescamps</option>
+            <option value="Bart Obin|+33 6 03 15 90 34">Bart Obin</option>
+            <option value="Cedric Paprocki|+33 6 34 19 36 41">Cedric Paprocki</option>
+            <option value="Charles-Michel Leke|+33 6 32 99 19 49">Charles-Michel Leke</option>
+            <option value="Emre Arman Aydin|+90 531 583 04 75">Emre Arman Aydin</option>
+            <option value="Foulques de Raigniac|+33 6 24 77 51 07">Foulques de Raigniac</option>
+            <option value="Jean-Marc Orselli|+33 6 26 92 80 70">Jean-Marc Orselli</option>
+            <option value="Pierre-Eliott Duverneuil|+33 6 12 06 23 54">Pierre-Eliott Duverneuil</option>
+            <option value="Thelma|+33 7 62 87 00 13">Thelma</option>
+            <option value="Victor Julien|+33 6 70 97 24 90">Victor Julien</option>
+          </select>
+        </div>
+        <div class="g2">
+          <div class="field"><label>Broker Name</label><input type="text" id="v${vid}-broker" placeholder="ex: John Smith"/></div>
+          <div class="field"><label>Téléphone / WhatsApp</label><input type="text" id="v${vid}-broker-phone" placeholder="ex: +33 6 12 34 56 78"/></div>
+        </div>
+      </div>
+
+    </div></div>`;
+  document.getElementById("vessels-list").appendChild(card);
+  addHL(vid); addHL(vid); addHL(vid);
+  updateIntroFields();
+  initDrag(card);
+  renumberVessels();
+  setMode(vid, "new_listing");
+}
+
+function previewUrl(inputId, imgId) {
+  const val = (document.getElementById(inputId)||{}).value||"";
+  const img = document.getElementById(imgId);
+  const input = document.getElementById(inputId);
+  if (!img) return;
+  clearFieldError(inputId);
+  if (val.startsWith("http")) {
+    img.src = val;
+    img.onload = () => { img.style.display = "block"; img.dataset.broken = "0"; clearFieldError(inputId); };
+    img.onerror = () => {
+      img.style.display = "none";
+      img.dataset.broken = "1";
+      markFieldError(inputId, "⚠ Image inaccessible ou URL invalide");
+    };
+  } else {
+    img.style.display = "none";
+  }
+}
+
+function markFieldError(inputId, msg) {
+  const input = document.getElementById(inputId);
+  if (!input) return;
+  input.classList.add('field-error');
+  let err = input.parentElement.querySelector('.field-error-msg');
+  if (!err) {
+    err = document.createElement('span');
+    err.className = 'field-error-msg';
+    input.parentElement.appendChild(err);
+  }
+  err.textContent = msg;
+}
+
+function clearFieldError(inputId) {
+  const input = document.getElementById(inputId);
+  if (!input) return;
+  input.classList.remove('field-error');
+  const err = input.parentElement.querySelector('.field-error-msg');
+  if (err) err.remove();
+}
+
+function updateVesselTitle(vid) {
+  const val = (document.getElementById("v"+vid+"-name")||{}).value||"";
+  const el = document.getElementById("vcname-"+vid);
+  if (!el) return;
+  const num = el.closest(".vessel-card") ? [...document.querySelectorAll(".vessel-card")].indexOf(el.closest(".vessel-card")) + 1 : vid;
+  el.innerHTML = (val||"New vessel") + `<span class="vcname-sub">· Vessel ${num}</span>`;
+}
+
+function renumberVessels() {
+  document.querySelectorAll(".vessel-card").forEach((card, i) => {
+    const vid = card.id.replace("vessel-", "");
+    const numEl = card.querySelector(".vcnum");
+    const nameEl = document.getElementById("vcname-" + vid);
+    if (numEl) numEl.textContent = i + 1;
+    if (nameEl) {
+      const name = g("v"+vid+"-name") || "New vessel";
+      nameEl.innerHTML = name + `<span class="vcname-sub">· Vessel ${i + 1}</span>`;
+    }
+  });
+}
+
+function toggleVessel(vid) {
+  const body=document.getElementById("vcbody-"+vid);
+  const tog=document.getElementById("vctog-"+vid);
+  const open=body.classList.contains("open");
+  body.style.display=open?"none":"block";
+  body.classList.toggle("open",!open);
+  tog.classList.toggle("open",!open);
+}
+
+function selectBroker(vid, value) {
+  if (!value) return;
+  const parts = value.split('|');
+  const nameEl = document.getElementById('v'+vid+'-broker');
+  const phoneEl = document.getElementById('v'+vid+'-broker-phone');
+  if (nameEl) nameEl.value = parts[0] || '';
+  if (phoneEl) phoneEl.value = parts[1] || '';
+}
+
+function removeVessel(vid) {
+  const name = g("v"+vid+"-name") || "ce bateau";
+  const card = document.getElementById("vessel-"+vid);
+  if (!card) return;
+  // Inline confirmation banner inside the card
+  const existing = card.querySelector(".rm-confirm");
+  if (existing) { existing.remove(); return; }
+  const bar = document.createElement("div");
+  bar.className = "rm-confirm";
+  bar.style.cssText = "background:#fff5f5;border-top:1px solid #f5c6cb;padding:10px 16px;display:flex;align-items:center;gap:12px;font-size:12px;color:#c0392b;";
+  bar.innerHTML = `<span style="flex:1;">Supprimer <strong>${esc(name)}</strong> ? Cette action est irréversible.</span>
+    <button onclick="document.getElementById('vessel-${vid}').remove();updateIntroFields();renumberVessels();" style="background:#c0392b;color:white;border:none;border-radius:3px;padding:6px 14px;font-size:11px;font-weight:700;cursor:pointer;">Oui, supprimer</button>
+    <button onclick="this.parentElement.remove()" style="background:none;border:1px solid #DDD;border-radius:3px;padding:6px 12px;font-size:11px;cursor:pointer;color:#777;">Annuler</button>`;
+  card.appendChild(bar);
+  bar.scrollIntoView({behavior:"smooth", block:"nearest"});
+}
+
+let hlCounters={};
+function addHL(vid,val) {
+  if(!hlCounters[vid]) hlCounters[vid]=0;
+  hlCounters[vid]++;
+  const hid="hl-"+vid+"-"+hlCounters[vid];
+  const rowId="hlrow-"+vid+"-"+hlCounters[vid];
+  const ph=HL_PH[(hlCounters[vid]-1)%HL_PH.length];
+  const div=document.createElement("div");
+  div.className="hl-row"; div.id=rowId;
+  div.innerHTML=`<input type="text" id="${hid}" placeholder="${ph}" value="${val||""}"/><button class="btn-del-hl" onclick="document.getElementById('${rowId}').remove()">×</button>`;
+  document.getElementById("hl-container-"+vid).appendChild(div);
+}
+
+function g(id){const e=document.getElementById(id);return e?e.value.trim():"";}
+
+function buildVesselBlock(vid) {
+  const name=g("v"+vid+"-name"), price=g("v"+vid+"-price");
+  const hero=g("v"+vid+"-photo-hero"), ext1=g("v"+vid+"-photo-ext1"), ext2=g("v"+vid+"-photo-ext2");
+  const int1=g("v"+vid+"-photo-int1"), int2=g("v"+vid+"-photo-int2"), int3=g("v"+vid+"-photo-int3");
+  const desc1=g("v"+vid+"-desc1"), desc2=g("v"+vid+"-desc2"), desc3=g("v"+vid+"-desc3");
+  const location=g("v"+vid+"-location"), broker=g("v"+vid+"-broker"), brokerPhone=g("v"+vid+"-broker-phone"), brochureUrl=g("v"+vid+"-brochure-url"), brochureBfUrl=g("v"+vid+"-brochure-bf-url");
+  const modeKey = (document.getElementById("v"+vid+"-mode")||{}).value || "new_listing";
+  const modeCfg = MODES[modeKey] || MODES.new_listing;
+
+  // All specs — label + field id suffix
+  const specDefs = [
+    ["Asking Price", "sp-price", true],["VAT","vat"],["Builder","builder"],
+    ["Built","built"],["Max Speed","speed"],["Cruising Speed","cruise"],
+    ["Guest Cabins","cabins"],["Guest Heads","heads"],["Pax Max","pax"],
+    ["LOA","loa"],["Beam","beam"],["Draft","draft"],
+    ["Gross Tonnage","tonnage"],["Engines","engines"],["HP","hp"],
+    ["Range","range"],["Fuel Capacity","fuel"],["Fuel Consumption","conso"],
+    ["Fresh Water","water"],["Black Water","blackwater"],["Generator","gen"],
+    ["Generator Hours","genhours"],["Anchor Chain","chain"],["Services","services"],
+    ["Air Conditioning","clim"],["Joystick","joystick"],["Bow Thruster","bow"],
+    ["Radar","radar"],["Stabilizer","stabilizer"],
+  ];
+
+  const allSpecs = specDefs.map(s => {
+    const val = g("v"+vid+"-"+s[1]);
+    return val ? {label: s[0], value: val} : null;
+  }).filter(Boolean);
+
+  while(allSpecs.length%3!==0) allSpecs.push({label:"",value:""});
+
+  let specsRows="";
+  for(let i=0;i<allSpecs.length;i+=3){
+    specsRows+="<tr>"+allSpecs.slice(i,i+3).map(c=>`<td><span class="spec-label">${c.label}</span><span class="spec-value">${c.value}</span></td>`).join("")+"</tr>";
+  }
+
+  const badgeHTML = `<div style="display:inline-block;background:${modeCfg.color};color:white;font-family:Arial,sans-serif;font-size:9px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;padding:6px 14px;border-radius:2px;">${modeCfg.emoji} ${modeCfg.label}</div>`;
+  const badgeBarHTML = `<div style="padding:10px 20px;background:white;border-bottom:1px solid #E4E4E4;">${badgeHTML}</div>`;
+  const heroHTML = hero && hero.startsWith("http")
+    ? `<div style="position:relative;">${badgeBarHTML}<img src="${hero}" class="nl-hero" alt="${name}" style="width:100%;height:320px;object-fit:cover;display:block;border-bottom:1px solid #E4E4E4;"/></div>`
+    : `<div>${badgeBarHTML}<div class="nl-hero-empty"><span>+ Main photo</span></div></div>`;
+
+  function gc(url,label,h){
+    return url&&url.startsWith("http")
+      ? `<img src="${url}" alt="${label}" style="flex:1;height:${h}px;object-fit:cover;border-right:1.5px solid white;display:block;"/>`
+      : `<div style="flex:1;height:${h}px;background:linear-gradient(135deg,#C5CACF,#A7B4BC);display:flex;align-items:center;justify-content:center;border-right:1.5px solid white;"><span style="font-size:7px;letter-spacing:.3em;text-transform:uppercase;color:rgba(0,0,0,.2);">${label}</span></div>`;
+  }
+  function gcTd(url,label,h){
+    return url&&url.startsWith("http")
+      ? `<img src="${url}" alt="${label}" width="100%" style="display:block;height:${h}px;object-fit:cover;width:100%;"/>`
+      : `<div style="height:${h}px;background:linear-gradient(135deg,#C5CACF,#A7B4BC);display:flex;align-items:center;justify-content:center;"><span style="font-size:7px;letter-spacing:.3em;text-transform:uppercase;color:rgba(0,0,0,.2);">${label}</span></div>`;
+  }
+
+  const descHTML=[desc1,desc2,desc3].filter(Boolean).map(d=>`<p>${esc(d)}</p>`).join("");
+  const hlInputs=document.querySelectorAll("#hl-container-"+vid+" .hl-row input");
+  const highlights=Array.from(hlInputs).map(i=>i.value.trim()).filter(Boolean);
+  const hlHTML=highlights.map(h=>`<li>${esc(h)}</li>`).join("");
+  const brokerPhoneHTML = brokerPhone
+    ? `<a href="tel:${esc(brokerPhone)}" style="display:inline-flex;align-items:center;gap:6px;margin-top:8px;color:#1B8097;font-size:12px;font-weight:700;text-decoration:none;letter-spacing:.04em;">
+        <span style="font-size:14px;">📞</span> ${esc(brokerPhone)}
+       </a>`
+    : "";
+  const brokerHTML = broker
+    ? `<strong style="display:block;font-size:14px;color:#1A1A1A;margin-bottom:2px;">${esc(broker)}</strong>
+       <span style="font-size:11px;color:#999;letter-spacing:.1em;text-transform:uppercase;">Broker</span>
+       ${brokerPhoneHTML}`
+    : `<span style="color:#CCC;font-style:italic;">Broker to fill in</span>`;
+
+  return `
+  ${heroHTML}
+  ${price?`<div class="nl-price">Price : <strong>${esc(price)}</strong></div>`:""}
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-bottom:1px solid #E4E4E4;"><tr>
+    <td width="50%" style="padding:0;border-right:2px solid white;">${gcTd(ext1,"+ Ext. 1",165)}</td>
+    <td width="50%" style="padding:0;">${gcTd(ext2,"+ Ext. 2",165)}</td>
+  </tr></table>
+  ${descHTML?`<div class="nl-section"><div class="nl-section-title">Description</div>${descHTML}</div>`:""}
+  ${location?`<div class="nl-location">📍 &nbsp;Location : ${esc(location)}</div>`:""}
+  ${hlHTML?`<div class="nl-highlights"><div class="nl-section-title">Key Highlights</div><ul class="nl-hl-list">${hlHTML}</ul></div>`:""}
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="border-bottom:1px solid #E4E4E4;"><tr>
+    <td width="33%" style="padding:0;border-right:2px solid white;">${gcTd(int1,"+ Int. 1",130)}</td>
+    <td width="34%" style="padding:0;border-right:2px solid white;">${gcTd(int2,"+ Int. 2",130)}</td>
+    <td width="33%" style="padding:0;">${gcTd(int3,"+ Int. 3",130)}</td>
+  </tr></table>
+  ${specsRows?`<div class="nl-specs-header"><span>Specifications</span></div><table class="specs-table" cellpadding="0" cellspacing="0">${specsRows}</table>`:""}
+  <div class="nl-contact">
+    <div class="broker-display">${brokerHTML}</div>
+    <div style="text-align:center;">
+      ${brochureUrl ? '<a href="' + brochureUrl + '" class="nl-contact-btn" target="_blank" style="background:#1A1A2E;display:inline-block;margin:6px 8px;white-space:nowrap;min-width:160px;">Brochure</a>' : ''}
+      ${brochureBfUrl ? '<a href="' + brochureBfUrl + '" class="nl-contact-btn" target="_blank" style="background:#2D6A4F;display:inline-block;margin:6px 8px;white-space:nowrap;min-width:160px;">Brochure BF</a>' : ''}
+    </div>
+  </div>`;
+}
+
+function validateForm() {
+  const errors = [];
+  const cards = document.querySelectorAll(".vessel-card");
+  if (!cards.length) { errors.push("Ajoutez au moins un bateau."); return errors; }
+  cards.forEach((card, i) => {
+    const vid = card.id.replace("vessel-", "");
+    const name = g("v"+vid+"-name");
+    const hero = g("v"+vid+"-photo-hero");
+    if (!name) errors.push(`Bateau ${i+1} : nom du bateau manquant.`);
+    // Warn if broken image detected (but photo itself is optional — shows placeholder if missing)
+    const heroImg = document.getElementById("v"+vid+"-thumb-hero");
+    if (heroImg && heroImg.dataset.broken === "1") errors.push(`Bateau ${i+1} (${name||"sans nom"}) : la photo principale est inaccessible (URL cassée).`);
+  });
+  return errors;
+}
+
+function esc(str) {
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+
+function setVesselMode(vid, mode) {
+  const manual = document.getElementById('vzone-manual-' + vid);
+  const pdf = document.getElementById('vzone-pdf-' + vid);
+  const btnManual = document.getElementById('vmode-manual-' + vid);
+  const btnPdf = document.getElementById('vmode-pdf-' + vid);
+  if (!manual || !pdf) return;
+  if (mode === 'pdf') {
+    manual.style.display = 'none';
+    pdf.style.display = 'block';
+    btnPdf.style.cssText = 'flex:1;padding:9px;border:2px solid #6B5CE7;background:#6B5CE7;color:#fff;border-radius:5px;font-size:11px;font-weight:700;cursor:pointer;letter-spacing:.06em;';
+    btnManual.style.cssText = 'flex:1;padding:9px;border:2px solid #DDD;background:#fff;color:#999;border-radius:5px;font-size:11px;font-weight:700;cursor:pointer;letter-spacing:.06em;';
+  } else {
+    manual.style.display = 'block';
+    pdf.style.display = 'none';
+    btnManual.style.cssText = 'flex:1;padding:9px;border:2px solid #6B5CE7;background:#6B5CE7;color:#fff;border-radius:5px;font-size:11px;font-weight:700;cursor:pointer;letter-spacing:.06em;';
+    btnPdf.style.cssText = 'flex:1;padding:9px;border:2px solid #DDD;background:#fff;color:#999;border-radius:5px;font-size:11px;font-weight:700;cursor:pointer;letter-spacing:.06em;';
+  }
+}
+
+function handlePdfDrop(event, vid) {
+  event.preventDefault();
+  const drop = document.getElementById('pdf-drop-' + vid);
+  if (drop) drop.style.background = 'transparent';
+  const file = event.dataTransfer.files[0];
+  if (file && file.type === 'application/pdf') processPdfFile(file, vid);
+  else setPdfStatus(vid, '❌ PDF uniquement', 'red');
+}
+
+function handlePdfFile(input, vid) {
+  const file = input.files[0];
+  if (file) processPdfFile(file, vid);
+}
+
+function setPdfStatus(vid, msg, color) {
+  const el = document.getElementById('pdf-status-' + vid);
+  if (el) { el.textContent = msg; el.style.color = color || '#6B5CE7'; }
+}
+
+function processPdfFile(file, vid) {
+  setPdfStatus(vid, '⏳ Lecture du PDF...', '#6B5CE7');
+  const reader = new FileReader();
+  reader.onload = async function(e) {
+    const base64 = e.target.result.split(',')[1];
+    setPdfStatus(vid, '🤖 Extraction en cours...', '#6B5CE7');
+    const prompt = `Lis cette brochure de yacht et extrais toutes les informations.
+Réponds UNIQUEMENT en JSON valide, sans markdown, sans backticks.
+
+RÈGLES STRICTES pour les descriptions :
+- desc1, desc2, desc3 : maximum 2 phrases chacune, ton luxueux et concis
+- highlights : 4 à 5 points clés, format court "Spec — détail"
+- Ne jamais répéter la même info dans deux champs
+
+{
+  "name": "nom du bateau",
+  "price": "prix demandé avec devise",
+  "location": "port ou ville",
+  "broker": "nom du broker",
+  "brokerPhone": "téléphone du broker",
+  "desc1": "accroche commerciale courte (2 phrases max)",
+  "desc2": "points forts intérieurs/confort (2 phrases max)",
+  "desc3": "performances et état technique (2 phrases max)",
+  "highlights": ["point clé 1", "point clé 2", "point clé 3", "point clé 4"],
+  "specs": {
+    "builder": "", "built": "", "loa": "", "beam": "", "draft": "",
+    "speed": "", "cruise": "", "cabins": "", "heads": "", "pax": "",
+    "engines": "", "hp": "", "range": "", "fuel": "", "conso": "",
+    "water": "", "blackwater": "", "gen": "", "genhours": "", "chain": "",
+    "tonnage": "", "clim": "", "joystick": "", "bow": "", "radar": "",
+    "stabilizer": "", "services": "", "vat": ""
+  }
+}
+Laisse vide ("") les champs non trouvés.`;
+
+    try {
+      const response = await fetch('/api/claude', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 4000,
+          messages: [{
+            role: 'user',
+            content: [
+              { type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: base64 } },
+              { type: 'text', text: prompt }
+            ]
+          }]
+        })
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error?.message || 'API error');
+      const text = data.content.map(b => b.text || '').join('').trim();
+      const clean = text.replace(/```json|```/g, '').trim();
+      const json = JSON.parse(clean);
+      fillVesselFromPdf(vid, json);
+      setPdfStatus(vid, '✅ Données importées — vérifiez et complétez les photos', '#2D6A4F');
+    } catch(err) {
+      console.error(err);
+      setPdfStatus(vid, '❌ Erreur : ' + err.message, 'red');
+    }
+  };
+  reader.readAsDataURL(file);
+}
+
+
+function importPdfJson(vid) {
+  const ta = document.getElementById('pdf-json-' + vid);
+  if (!ta || !ta.value.trim()) { alert('Colle le JSON de Claude.'); return; }
+  try {
+    const json = JSON.parse(ta.value.trim());
+    fillVesselFromPdf(vid, json);
+    setVesselMode(vid, 'manual');
+    setPdfStatus(vid, '✅ Données importées !', '#2D6A4F');
+  } catch(e) {
+    alert('JSON invalide — copie uniquement le bloc JSON retourné par Claude.');
+  }
+}
+
+function fillVesselFromPdf(vid, d) {
+  const s = (id, val) => { const el = document.getElementById('v'+vid+'-'+id); if (el && val) el.value = val; };
+  s('name', d.name); s('price', d.price); s('location', d.location);
+  s('broker', d.broker); s('broker-phone', d.brokerPhone);
+  s('desc1', d.desc1); s('desc2', d.desc2); s('desc3', d.desc3);
+  if (d.specs) {
+    Object.entries(d.specs).forEach(([k,v]) => {
+      if (!v) return;
+      if (k === 'price') s('sp-price', v);
+      else s(k, v);
+    });
+  }
+  if (d.price) { s('sp-price', d.price); s('price', d.price); }
+  if (d.highlights && d.highlights.length) {
+    const container = document.getElementById('hl-container-'+vid);
+    if (container) {
+      const inputs = container.querySelectorAll('.hl-row input');
+      d.highlights.forEach((hl, i) => { if (inputs[i]) inputs[i].value = hl; });
+    }
+  }
+}
+
+function generateNewsletter() {
+  const errors = validateForm();
+  const errBox = document.getElementById("validation-errors");
+  const errList = document.getElementById("validation-errors-list");
+  if (errors.length) {
+    errList.innerHTML = errors.map(e => `<li>${e}</li>`).join("");
+    errBox.style.display = "block";
+    errBox.scrollIntoView({behavior:"smooth", block:"center"});
+    return;
+  }
+  errBox.style.display = "none";
+
+  const logoUrl = (document.getElementById('f-logo-url')||{}).value||'';
+  const logoSrc = logoUrl.startsWith('http') ? logoUrl : '';
+  const cards=document.querySelectorAll(".vessel-card");
+  const singleVessel = cards.length === 1;
+  const L = LANG[currentLang];
+  // For single vessel, use mode-specific intro if available
+  let intro1, intro2;
+  if (singleVessel) {
+    const firstVid = cards[0].id.replace("vessel-","");
+    const modeKey = (document.getElementById("v"+firstVid+"-mode")||{}).value || "new_listing";
+    const mCfg = MODES[modeKey] || MODES.new_listing;
+    intro1 = currentLang === 'fr' ? mCfg.intro_fr : mCfg.intro_en;
+    intro2 = "";
+  } else {
+    intro1 = g("f-intro1") || L.intro1_multi;
+    intro2 = g("f-intro2") || L.intro2_multi;
+  }
+  let vesselsHTML="";
+  cards.forEach((card,idx)=>{
+    const vid=card.id.replace("vessel-","");
+    if(idx>0){const name=esc(g("v"+vid+"-name"))||"Bateau "+(idx+1);vesselsHTML+=`<div class="vessel-sep"><span>${name}</span></div>`;}
+    vesselsHTML+=buildVesselBlock(vid);
+  });
+  const logoHTML = logoSrc
+    ? '<img src="'+logoSrc+'" alt="Moana Yachting" style="width:100%;display:block;"/>'
+    : '<div style="padding:18px;text-align:center;font-family:Arial;font-size:13px;font-weight:700;letter-spacing:.3em;color:rgba(255,255,255,.7);">MOANA YACHTING</div>';
+  const nl=`<div class="nl">
+  <div class="nl-header">${logoHTML}</div>
+  <div class="nl-intro">${intro1?`<p>${esc(intro1)}</p>`:""}${intro2?`<p>${esc(intro2)}</p>`:""}</div>
+  ${vesselsHTML}
+  <div class="nl-footer"><p>© ${new Date().getFullYear()} Moana Yachting · Tous droits réservés<br><a href="#">Se désabonner</a> &nbsp;·&nbsp; <a href="https://moanayachting.com/sales/featured-superyachts-for-sale/" target="_blank">Notre flotte</a></p></div>
+</div>`;
+  window._nlHTML=nl;
+  document.getElementById("nl-render").innerHTML=nl;
+  document.getElementById("step-form").style.display="none";
+  document.getElementById("step-preview").style.display="block";
+  window.scrollTo(0,0);
+  saveHistory();
+}
+
+function goBack(){
+  document.getElementById("step-preview").style.display="none";
+  document.getElementById("step-form").style.display="block";
+  window.scrollTo(0,0);
+}
+
+function showToast(msg, isError) {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.toggle("error", !!isError);
+  t.classList.add("show");
+  setTimeout(() => t.classList.remove("show"), 3000);
+}
+
+function copyHTML(){
+  const css=`.nl{max-width:600px;margin:0 auto;background:white;border:1px solid #CCC;}.nl-header{background:#1B8097;}.nl-header img{width:100%;display:block;}.nl-intro{padding:26px 44px 22px;text-align:center;border-bottom:1px solid #E4E4E4;}.nl-intro p{font-size:13.5px;color:#444;line-height:1.9;font-style:italic;}.nl-intro p+p{margin-top:6px;}.vessel-sep{padding:10px 28px;background:#1B8097;text-align:center;border-top:3px solid #156B7E;}.vessel-sep span{font-size:9px;font-weight:700;letter-spacing:.38em;text-transform:uppercase;color:rgba(255,255,255,.6);}.nl-price{background:#F9F9F9;border-bottom:1px solid #E4E4E4;padding:10px 24px;text-align:center;font-size:13px;color:#555;}.nl-price strong{color:#1A1A1A;font-size:15px;font-weight:700;}.nl-section{padding:22px 28px;border-bottom:1px solid #E4E4E4;background:white;}.nl-section-title{font-size:10.5px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:#1B8097;padding-bottom:9px;margin-bottom:13px;border-bottom:1.5px solid #1B8097;display:inline-block;}.nl-section p{font-size:13px;color:#444;line-height:1.85;margin-bottom:7px;}.nl-location{padding:12px 28px;background:#F9F9F9;border-bottom:1px solid #E4E4E4;font-size:12px;color:#777;text-transform:uppercase;letter-spacing:.14em;font-weight:600;}.nl-highlights{padding:20px 28px 22px;border-bottom:1px solid #E4E4E4;background:white;}.nl-hl-list{list-style:none;margin-top:10px;}.nl-hl-list li{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid #E4E4E4;font-size:13px;color:#1A1A1A;line-height:1.5;}.nl-hl-list li:last-child{border-bottom:none;}.nl-hl-list li::before{content:"—";color:#1B8097;font-weight:700;flex-shrink:0;}.nl-specs-header{background:#1B8097;padding:11px 28px;text-align:center;}.nl-specs-header span{font-size:9.5px;font-weight:700;letter-spacing:.38em;text-transform:uppercase;color:rgba(255,255,255,.65);}.specs-table{width:100%;border-collapse:collapse;background:white;}.specs-table td{width:33.33%;padding:13px 10px;border:1px solid #E4E4E4;text-align:center;vertical-align:middle;}.spec-label{display:block;font-size:8.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:#777;margin-bottom:5px;}.spec-value{display:block;font-size:15px;font-weight:700;color:#1A1A1A;line-height:1.25;}.nl-contact{padding:26px 28px 22px;background:#F9F9F9;border-bottom:1px solid #E4E4E4;text-align:center;border-top:1px solid #E4E4E4;}.broker-display{font-size:13px;color:#777;margin-bottom:16px;line-height:1.6;}.broker-display strong{color:#1A1A1A;font-weight:700;}.nl-contact-btn{display:inline-block;background:#6B5CE7;color:white;padding:12px 52px;font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;border-radius:3px;}.nl-footer{background:#1B8097;padding:16px 28px;text-align:center;}.nl-footer p{font-size:10px;color:rgba(255,255,255,.45);line-height:1.8;}.nl-footer a{color:rgba(255,255,255,.55);text-decoration:underline;}`;
+  const full=`<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8"><title>Moana Yachting</title><style>*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}body{font-family:Arial,Helvetica,sans-serif;background:#D0D4D7;padding:20px;}${css}</style></head><body>${window._nlHTML||""}</body></html>`;
+  function doFallbackCopy() {
+    const ta = document.createElement("textarea");
+    ta.value = full;
+    ta.style.cssText = "position:fixed;top:0;left:0;opacity:0;pointer-events:none;";
+    document.body.appendChild(ta);
+    ta.focus(); ta.select();
+    try {
+      document.execCommand("copy");
+      showToast("HTML copie (fallback) !");
+    } catch(e) {
+      showToast("Echec copie — réessayez", true);
+    }
+    document.body.removeChild(ta);
+  }
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(full).then(() => {
+      showToast("HTML copied !");
+    }).catch(() => {
+      doFallbackCopy();
+    });
+  } else {
+    doFallbackCopy();
+  }
+}
+
+// ── Autosave to localStorage ──────────────────────────────────────────────
+let _autosaveTimer = null;
+function autosave() {
+  clearTimeout(_autosaveTimer);
+  _autosaveTimer = setTimeout(() => {
+    try {
+      const data = {};
+      document.querySelectorAll("input[id], textarea[id]").forEach(el => {
+        if (el.id) data[el.id] = el.value;
+      });
+      localStorage.setItem("moana_draft_v16", JSON.stringify(data));
+      const banner = document.getElementById("autosave-banner");
+      if (banner) {
+        banner.style.display = "block";
+        banner.classList.remove("fading");
+        setTimeout(() => { banner.classList.add("fading"); }, 1800);
+        setTimeout(() => { banner.style.display = "none"; banner.classList.remove("fading"); }, 2300);
+      }
+    } catch(e) {}
+  }, 800);
+}
+document.addEventListener("input", autosave);
+
+function restoreDraft() {
+  try {
+    const raw = localStorage.getItem("moana_draft_v16");
+    if (!raw) return false;
+    const data = JSON.parse(raw);
+    Object.entries(data).forEach(([id, val]) => {
+      const el = document.getElementById(id);
+      if (el) { el.value = val; el.dispatchEvent(new Event("input")); }
+    });
+    return true;
+  } catch(e) { return false; }
+}
+
+addVessel();
+// Init logo preview with default URL
+(function(){ const el = document.getElementById('f-logo-url'); if(el) updateLogo(el.value); })();
+// Init history panel
+renderHistory();
+
+// Restore draft if available
+setTimeout(() => {
+  try {
+    const raw = localStorage.getItem("moana_draft_v16");
+    if (raw && Object.keys(JSON.parse(raw)).length > 2) {
+      if (confirm("Un brouillon non enregistré a été trouvé. Voulez-vous le restaurer ?")) {
+        restoreDraft();
+      }
+    }
+  } catch(e) {}
+}, 300);
+</script>
+</body>
+</html>
